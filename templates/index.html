@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Genshin Weapon Predictor</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body { background-color: #f4f7f6; }
+        .card { border-radius: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
+        .btn-primary { background-color: #3f51b5; border: none; }
+    </style>
+</head>
+<body>
+    <div class="container mt-5">
+        <div class="row justify-content-center">
+            <div class="col-md-8">
+                <div class="card p-4">
+                    <h2 class="text-center mb-4">🗡️ Prediksi Jenis Senjata Karakter</h2>
+                    <p class="text-muted text-center">Analisis Prediktif Berdasarkan Atribut Statistik Dasar</p>
+                    <hr>
+                    <form action="/predict" method="post">
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Level</label>
+                                <input type="number" name="Lv" class="form-control" placeholder="Contoh: 90" required>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Rarity (Bintang)</label>
+                                <select name="Rarity" class="form-select">
+                                    <option value="4">4 Star</option>
+                                    <option value="5">5 Star</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-4 mb-3"><label>Base HP</label><input type="number" name="HP" class="form-control" required></div>
+                            <div class="col-md-4 mb-3"><label>Base ATK</label><input type="number" name="ATK" class="form-control" required></div>
+                            <div class="col-md-4 mb-3"><label>Base DEF</label><input type="number" name="DEF" class="form-control" required></div>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label>Element & Role (Gunakan Angka Hasil Encoding)</label>
+                            <div class="input-group">
+                                <input type="number" name="Element" class="form-control" placeholder="Element Enc">
+                                <input type="number" name="Role" class="form-control" placeholder="Role Enc">
+                                <input type="number" name="Ascension" class="form-control" placeholder="Ascension Enc">
+                            </div>
+                        </div>
+
+                        <button type="submit" class="btn btn-primary w-100 py-2">Prediksi Sekarang</button>
+                    </form>
+
+                    {% if result %}
+                    <div class="mt-4 alert alert-success text-center">
+                        <h4>Hasil Prediksi: <strong>{{ result }}</strong></h4>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
