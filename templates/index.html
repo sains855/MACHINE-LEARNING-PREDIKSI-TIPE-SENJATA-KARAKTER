@@ -3,62 +3,181 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Genshin Weapon Predictor</title>
+    <title>Genshin Weapon Predictor Pro</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
     <style>
-        body { background-color: #f4f7f6; }
-        .card { border-radius: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
-        .btn-primary { background-color: #3f51b5; border: none; }
+        body { 
+            background: linear-gradient(135deg, #ece9e6 0%, #ffffff 100%);
+            font-family: 'Poppins', sans-serif;
+            min-height: 100vh;
+        }
+        .main-card {
+            border: none;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            background: #fff;
+        }
+        .card-header-custom {
+            background: #3f51b5;
+            color: white;
+            padding: 2rem;
+            text-align: center;
+        }
+        .nav-tabs {
+            border-bottom: 2px solid #dee2e6;
+            margin-bottom: 20px;
+        }
+        .nav-link {
+            color: #6c757d;
+            font-weight: 600;
+            border: none !important;
+        }
+        .nav-link.active {
+            color: #3f51b5 !important;
+            border-bottom: 3px solid #3f51b5 !important;
+            background: transparent !important;
+        }
+        .form-control, .form-select {
+            border-radius: 10px;
+            padding: 12px;
+            border: 1px solid #e0e0e0;
+        }
+        .form-control:focus {
+            box-shadow: 0 0 0 3px rgba(63, 81, 181, 0.2);
+            border-color: #3f51b5;
+        }
+        .btn-predict {
+            background: #3f51b5;
+            color: white;
+            border-radius: 12px;
+            padding: 15px;
+            font-weight: 600;
+            transition: all 0.3s;
+            border: none;
+        }
+        .btn-predict:hover {
+            background: #303f9f;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(63, 81, 181, 0.4);
+        }
+        .result-box {
+            background: #e8f5e9;
+            border-left: 5px solid #4caf50;
+            border-radius: 10px;
+            animation: slideIn 0.5s ease-out;
+        }
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .icon-label { margin-right: 8px; color: #3f51b5; }
     </style>
 </head>
 <body>
-    <div class="container mt-5">
-        <div class="row justify-content-center">
-            <div class="col-md-8">
-                <div class="card p-4">
-                    <h2 class="text-center mb-4">🗡️ Prediksi Jenis Senjata Karakter</h2>
-                    <p class="text-muted text-center">Analisis Prediktif Berdasarkan Atribut Statistik Dasar</p>
-                    <hr>
-                    <form action="/predict" method="post">
-                        <div class="row">
-                            <div class="col-md-6 mb-3">
-                                <label class="form-label">Level</label>
-                                <input type="number" name="Lv" class="form-control" placeholder="Contoh: 90" required>
-                            </div>
-                            <div class="col-md-6 mb-3">
-                                <label class="form-label">Rarity (Bintang)</label>
-                                <select name="Rarity" class="form-select">
-                                    <option value="4">4 Star</option>
-                                    <option value="5">5 Star</option>
-                                </select>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-md-4 mb-3"><label>Base HP</label><input type="number" name="HP" class="form-control" required></div>
-                            <div class="col-md-4 mb-3"><label>Base ATK</label><input type="number" name="ATK" class="form-control" required></div>
-                            <div class="col-md-4 mb-3"><label>Base DEF</label><input type="number" name="DEF" class="form-control" required></div>
-                        </div>
-                        
-                        <div class="mb-3">
-                            <label>Element & Role (Gunakan Angka Hasil Encoding)</label>
-                            <div class="input-group">
-                                <input type="number" name="Element" class="form-control" placeholder="Element Enc">
-                                <input type="number" name="Role" class="form-control" placeholder="Role Enc">
-                                <input type="number" name="Ascension" class="form-control" placeholder="Ascension Enc">
-                            </div>
-                        </div>
 
-                        <button type="submit" class="btn btn-primary w-100 py-2">Prediksi Sekarang</button>
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-7">
+            <div class="card main-card">
+                <div class="card-header-custom">
+                    <h2 class="mb-1"><i class="fas fa-crosshairs me-2"></i>Weapon Predictor</h2>
+                    <p class="mb-0 opacity-75">AI Character Analysis based on Base Stats</p>
+                </div>
+                
+                <div class="card-body p-4 p-md-5">
+                    <form action="/predict" method="post">
+                        <ul class="nav nav-tabs nav-fill" id="predictorTabs" role="tablist">
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link active" id="stats-tab" data-bs-toggle="tab" data-bs-target="#stats" type="button" role="tab">
+                                    <i class="fas fa-chart-bar me-1"></i> Core Stats
+                                </button>
+                            </li>
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link" id="meta-tab" data-bs-toggle="tab" data-bs-target="#meta" type="button" role="tab">
+                                    <i class="fas fa-tags me-1"></i> Attributes
+                                </button>
+                            </li>
+                        </ul>
+
+                        <div class="tab-content pt-3" id="predictorTabsContent">
+                            
+                            <div class="tab-pane fade show active" id="stats" role="tabpanel">
+                                <div class="row">
+                                    <div class="col-md-6 mb-4">
+                                        <label class="form-label fw-bold"><i class="fas fa-angle-double-up icon-label"></i>Level</label>
+                                        <input type="number" name="Lv" class="form-control" placeholder="e.g. 90" required>
+                                    </div>
+                                    <div class="col-md-6 mb-4">
+                                        <label class="form-label fw-bold"><i class="fas fa-star icon-label"></i>Rarity</label>
+                                        <select name="Rarity" class="form-select">
+                                            <option value="4">4 Star</option>
+                                            <option value="5">5 Star</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-4 mb-3">
+                                        <label class="form-label fw-bold">Base HP</label>
+                                        <input type="number" name="HP" class="form-control" placeholder="0" required>
+                                    </div>
+                                    <div class="col-md-4 mb-3">
+                                        <label class="form-label fw-bold">Base ATK</label>
+                                        <input type="number" name="ATK" class="form-control" placeholder="0" required>
+                                    </div>
+                                    <div class="col-md-4 mb-3">
+                                        <label class="form-label fw-bold">Base DEF</label>
+                                        <input type="number" name="DEF" class="form-control" placeholder="0" required>
+                                    </div>
+                                </div>
+                                <div class="text-end mt-3">
+                                    <button type="button" class="btn btn-outline-secondary" onclick="document.getElementById('meta-tab').click()">Next <i class="fas fa-arrow-right ms-1"></i></button>
+                                </div>
+                            </div>
+
+                            <div class="tab-pane fade" id="meta" role="tabpanel">
+                                <div class="alert alert-info py-2 small">
+                                    <i class="fas fa-info-circle me-1"></i> Masukkan kode numerik hasil encoding dari dataset Anda.
+                                </div>
+                                <div class="mb-4">
+                                    <label class="form-label fw-bold">Element Encoding</label>
+                                    <input type="number" name="Element" class="form-control" placeholder="e.g. 1 (Pyro), 2 (Hydro)...">
+                                </div>
+                                <div class="mb-4">
+                                    <label class="form-label fw-bold">Role Encoding</label>
+                                    <input type="number" name="Role" class="form-control" placeholder="e.g. 0 (DPS), 1 (Support)...">
+                                </div>
+                                <div class="mb-4">
+                                    <label class="form-label fw-bold">Ascension Stat Encoding</label>
+                                    <input type="number" name="Ascension" class="form-control" placeholder="e.g. 3 (Crit Rate)">
+                                </div>
+                                <div class="d-flex justify-content-between mt-3">
+                                    <button type="button" class="btn btn-outline-secondary" onclick="document.getElementById('stats-tab').click()"><i class="fas fa-arrow-left me-1"></i> Back</button>
+                                    <button type="submit" class="btn btn-predict px-5">Analisis Senjata <i class="fas fa-magic ms-2"></i></button>
+                                </div>
+                            </div>
+                        </div>
                     </form>
 
                     {% if result %}
-                    <div class="mt-4 alert alert-success text-center">
-                        <h4>Hasil Prediksi: <strong>{{ result }}</strong></h4>
+                    <div class="mt-5 p-4 result-box text-center">
+                        <span class="text-muted d-block mb-1">Hasil Prediksi AI:</span>
+                        <h2 class="text-success fw-bold mb-0">
+                            <i class="fas fa-khanda me-2"></i>{{ result }}
+                        </h2>
                     </div>
                     {% endif %}
                 </div>
             </div>
+            
+            <p class="text-center mt-4 text-muted small">
+                &copy; 2024 Genshin Analytics Tool | Powered by Machine Learning
+            </p>
         </div>
     </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
